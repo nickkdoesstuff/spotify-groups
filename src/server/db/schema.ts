@@ -8,6 +8,8 @@ import {
   serial,
   timestamp,
   varchar,
+  text,
+  integer
 } from "drizzle-orm/pg-core";
 
 /**
@@ -16,19 +18,43 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `spotify-groups_${name}`);
+export const createTable = pgTableCreator((name) => `spotify_data_${name}`);
 
-export const posts = createTable(
-  "post",
+// export const posts = createTable(
+//   "post",
+//   {
+//     id: serial("id").primaryKey(),
+//     name: varchar("name", { length: 256 }),
+//     createdAt: timestamp("created_at")
+//       .default(sql`CURRENT_TIMESTAMP`)
+//       .notNull(),
+//     updatedAt: timestamp("updatedAt"),
+//   },
+//   (example) => ({
+//     nameIndex: index("name_idx").on(example.name),
+//   })
+// );
+
+export const users = createTable(
+  "users",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
+    id: text("id").primaryKey(),
+    spotifyId: text("spotify_id").unique(),
+    username: text("username"),
+    avatar: text("avatar"),
+    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+  }
+)
+
+export const sessions = createTable("sessions", {
+	id: text("id").primaryKey(),
+	userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+	expiresAt: timestamp("expires_at", {
+		withTimezone: true,
+		mode: "date"
+	}).notNull()
+});
