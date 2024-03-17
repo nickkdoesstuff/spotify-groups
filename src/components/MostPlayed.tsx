@@ -18,7 +18,7 @@ export async function MostPlayed() {
             )
         )
     
-    const occurrencesMap: { [key: string]: number } = {}
+    const occurrencesMap: Record<string, number> = {};
 
     type SongsPlayed = typeof songsPlayed[0]
     interface TopSongs extends SongsPlayed {

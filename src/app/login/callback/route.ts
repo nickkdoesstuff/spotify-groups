@@ -6,6 +6,14 @@ import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
+interface SpotifyUser {
+	id: string;
+	display_name: string;
+    images: {
+        url: string
+    }[];
+}
+
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);
 	const code = url.searchParams.get("code");
@@ -31,7 +39,8 @@ export async function GET(request: Request): Promise<Response> {
             });
         }
 
-		const spotifyUser: SpotifyUser = await spotifyUserResponse.json();
+		const spotifyUserResponseData: SpotifyUser = await spotifyUserResponse.json();
+		const spotifyUser = spotifyUserResponseData;
 
 		// Replace this with your own DB client.
 		const existingUser = await db.query.users.findFirst({
@@ -86,12 +95,4 @@ export async function GET(request: Request): Promise<Response> {
 			status: 500
 		});
 	}
-}
-
-interface SpotifyUser {
-	id: string;
-	display_name: string;
-    images: {
-        url: string
-    }[];
 }
