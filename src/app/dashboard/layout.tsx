@@ -1,5 +1,8 @@
 import { getUser } from "@/lib/auth";
+import { generateMetadata } from "@/lib/utils";
 import { redirect } from "next/navigation";
+
+export const metadata = generateMetadata({ title: 'dashboard' })
 
 export default async function DashboardLayout({
     children,

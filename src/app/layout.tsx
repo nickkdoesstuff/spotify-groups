@@ -3,17 +3,17 @@ import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { generateMetadata } from "@/lib/utils";
+
+import { Toaster } from "@/components/ui/sonner"
+
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-export const metadata = {
-  title: "spotify groups",
-  description: "im bored lmao",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
+export const metadata = generateMetadata({})
 
 export default function RootLayout({
   children,
@@ -24,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable} dark`}>
         <TRPCReactProvider>{children}</TRPCReactProvider>
+        <Toaster />
       </body>
     </html>
   );
