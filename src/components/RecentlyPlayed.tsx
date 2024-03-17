@@ -9,8 +9,19 @@ import { cn } from "@/lib/utils"
 import { User } from "lucia";
 
 
-export async function RecentlyPlayed() {
-    const user = await getUser()
+interface RecentlyPlayedProps {
+    user?: User | null
+    isProfile?: boolean
+}
+
+export async function RecentlyPlayed({ user, isProfile }: RecentlyPlayedProps) {
+    if(!user) {
+        user = await getUser()
+    }
+
+    if(!isProfile) {
+        isProfile = false
+    }
 
     const lastPlayed = await db.query.songHistory.findMany({
         where: eq(songHistory.playedBy, user!.id),
@@ -21,7 +32,7 @@ export async function RecentlyPlayed() {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Last 10 Songs</CardTitle>
-                <CardDescription>The most recent songs you&apos;ve been listening to</CardDescription>
+                <CardDescription>The most recent songs {isProfile ? `${user?.username} has been` : <span>you&apos;ve been</span>} listening to</CardDescription>
             </CardHeader>
             <CardContent>
                 <ScrollArea className="h-[385px] flex flex-col">

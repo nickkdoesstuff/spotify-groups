@@ -2,7 +2,7 @@ import { getUser } from "@/lib/auth"
 import { RecentlyPlayed, RecentlyPlayedLoading } from "@/components/RecentlyPlayed"
 import { Suspense } from "react"
 import { ListeningTime , ListeningTimeLoading} from "@/components/ListeningTime"
-import { MostPlayed } from "@/components/MostPlayed"
+import { MostPlayed, MostPlayedLoading } from "@/components/MostPlayed"
 
 export default async function DashboardHome() {
     const user = await getUser()
@@ -18,7 +18,9 @@ export default async function DashboardHome() {
                 <Suspense fallback={<ListeningTimeLoading />}>
                     <ListeningTime />
                 </Suspense>
-                <MostPlayed />
+                <Suspense fallback={<MostPlayedLoading />}>
+                    <MostPlayed />
+                </Suspense>
             </div>
         </>
     )

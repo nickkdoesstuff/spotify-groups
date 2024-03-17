@@ -12,8 +12,15 @@ interface TimesArray {
     value: number
 }
 
-export async function ListeningTime() {
-    const user = await getUser()
+interface ListeningTimeProps {
+    user?: User | null
+    isProfile?: boolean
+}
+
+export async function ListeningTime({ user, isProfile }: ListeningTimeProps) {
+    if(!user) {
+        user = await getUser()
+    }
 
     let totalTime = 0
 
@@ -65,7 +72,7 @@ export async function ListeningTime() {
        <Card className="w-full">
         <CardHeader>
             <CardTitle>Listening Time</CardTitle>
-            <CardDescription>How long you&apos;ve spent listening this week</CardDescription>
+            <CardDescription>How long {isProfile ? `${user?.username} has` : <span>you&apos;ve</span>} spent listening this week</CardDescription>
         </CardHeader>
         <CardContent>
             <p className="font-bold text-2xl mb-6">{timeInMins} <span className="font-normal text-muted-foreground text-sm">minutes this week</span></p>

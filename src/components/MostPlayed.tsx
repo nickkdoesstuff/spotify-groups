@@ -6,9 +6,21 @@ import { and, eq, gte } from "drizzle-orm";
 import { startOfWeek } from "date-fns";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { User } from "lucia";
 
-export async function MostPlayed() {
-    const user = await getUser()
+interface MostPlayedProps {
+    user?: User | null
+    isProfile?: boolean
+}
+
+export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
+    if(!user) {
+        user = await getUser()
+    }
+
+    if(!isProfile) {
+        isProfile = false
+    }
 
     const songsPlayed = await db.select().from(songHistory)
         .where(
@@ -46,8 +58,8 @@ export async function MostPlayed() {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Most Listened To</CardTitle>
-                <CardDescription>Your most listened to songs this weeek</CardDescription>
+                <CardTitle>Most Played</CardTitle>
+                <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to songs this weeek</CardDescription>
             </CardHeader>
             <CardContent>
             <ScrollArea className="h-[385px] flex flex-col">
@@ -67,6 +79,22 @@ export async function MostPlayed() {
                     )
                 })}
                 </ScrollArea>
+            </CardContent>
+        </Card>
+    )
+}
+
+export function MostPlayedLoading() {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Most Listened To</CardTitle>
+                <CardDescription>Your most listened to songs this weeek</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="h-[385px] flex items-center justify-center">
+                    <p>Loading...</p>
+                </div>
             </CardContent>
         </Card>
     )
