@@ -10,6 +10,7 @@ import { User } from "lucia"
 import { Metadata, ResolvingMetadata } from "next"
 import { generateMetadata as genMeta } from "@/lib/utils"
 import { ProfileCard } from "@/components/ProfileCard"
+import { MostPlayedArtists, MostPlayedArtistsLoading } from "@/components/MostPlayedArtists"
 
 export async function generateMetadata({ params }: { params: { spotifyId: string } }, parent: ResolvingMetadata):Promise<Metadata> {
     const userList = await db.select().from(users).where(
@@ -45,6 +46,9 @@ export default async function Profile({ params }: { params: { spotifyId: string 
             </Suspense>
             <Suspense fallback={<MostPlayedLoading />}>
                 <MostPlayed user={user as User} isProfile />
+            </Suspense>
+            <Suspense fallback={<MostPlayedArtistsLoading />}>
+                <MostPlayedArtists user={user as User} isProfile />
             </Suspense>
         </div>
     )

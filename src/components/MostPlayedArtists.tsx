@@ -13,7 +13,7 @@ interface MostPlayedProps {
     isProfile?: boolean
 }
 
-export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
+export async function MostPlayedArtists({ user, isProfile }: MostPlayedProps) {
     if(!user) {
         user = await getUser()
     }
@@ -38,10 +38,10 @@ export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
     }
 
     songsPlayed.forEach(song => {
-        if(song.spotifyId in occurrencesMap) {
-            occurrencesMap[song.spotifyId]++
+        if(song.artistId in occurrencesMap) {
+            occurrencesMap[song.artistId]++
         } else {
-            occurrencesMap[song.spotifyId] = 1
+            occurrencesMap[song.artistId] = 1
         }
     })
 
@@ -49,7 +49,7 @@ export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
     const topSongs: TopSongs[]  = []
     for (let i = 0; i < 10; i++) {
         const id = sortedIds[i]
-        const object = songsPlayed.find(obj => obj.spotifyId == id)
+        const object = songsPlayed.find(obj => obj.artistId == id)
         if(object) {
             topSongs.push({ occurrences: occurrencesMap[id!]!, ...object })
         }
@@ -58,8 +58,8 @@ export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Most Played</CardTitle>
-                <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to songs this weeek</CardDescription>
+                <CardTitle>Top Artists</CardTitle>
+                <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to artists this weeek</CardDescription>
             </CardHeader>
             <CardContent>
             {topSongs.length > 0 && 
@@ -69,10 +69,10 @@ export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
                             <Card key={track.id} className={cn(topSongs[topSongs.length - 1] != track && "mb-2")}>
                                 <CardContent className="p-3">
                                     <div className="flex gap-2 items-center">
-                                        <img src={track.cover} className="rounded-lg h-16 w-16" />
+                                        <img src={track.artistCover} className="rounded-lg h-16 w-16" />
                                         <div className="flex flex-col gap-2">
-                                            <CardTitle>{track.title}</CardTitle>
-                                            <CardDescription>{track.artist} &bull; Played <strong>{track.occurrences}</strong> times</CardDescription>
+                                            <CardTitle>{track.artist}</CardTitle>
+                                            <CardDescription>Played <strong>{track.occurrences}</strong> times</CardDescription>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -91,7 +91,7 @@ export async function MostPlayed({ user, isProfile }: MostPlayedProps) {
     )
 }
 
-export function MostPlayedLoading() {
+export function MostPlayedArtistsLoading() {
     return (
         <Card>
             <CardHeader>

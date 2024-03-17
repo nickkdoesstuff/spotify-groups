@@ -64,6 +64,8 @@ export const songHistory = createTable("song_history", {
   spotifyId: text("spotify_id").notNull(),
   title: text("title").notNull(),
   artist: text("artist").notNull(),
+  artistId: text("artist_id").notNull(),
+  artistCover: text("artist_art").notNull(),
   cover: text("art").notNull(),
   playedBy: text("played_by").references(() => users.id).notNull(),
   playedAt: timestamp("played_at", {
@@ -74,4 +76,10 @@ export const songHistory = createTable("song_history", {
     mode: "date",
     withTimezone: true
   }).notNull()
+})
+
+export const artistImages = createTable("artist_images", {
+  id: serial("id").primaryKey(),
+  spotifyArtistId: text("spotify_artist_id").notNull(),
+  image: text("image").notNull()
 })

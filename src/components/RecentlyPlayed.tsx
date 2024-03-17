@@ -3,10 +3,11 @@ import { getUser } from "@/lib/auth"
 import { db } from "@/server/db"
 import { eq } from "drizzle-orm"
 import { songHistory } from "@/server/db/schema"
-import { formatDistance } from "date-fns"
+import { format, formatDistance } from "date-fns"
 import { ScrollArea } from "./ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { User } from "lucia";
+import { HoverCardContent, HoverCard, HoverCardTrigger } from "./ui/hover-card"
 
 
 interface RecentlyPlayedProps {
@@ -35,23 +36,39 @@ export async function RecentlyPlayed({ user, isProfile }: RecentlyPlayedProps) {
                 <CardDescription>The most recent songs {isProfile ? `${user?.username} has been` : <span>you&apos;ve been</span>} listening to</CardDescription>
             </CardHeader>
             <CardContent>
+                {lastPlayed.length > 0 && 
                 <ScrollArea className="h-[385px] flex flex-col">
-                {lastPlayed.map(track => {
-                    return (
-                        <Card key={track.id} className={cn(lastPlayed[lastPlayed.length - 1] != track && "mb-2")}>
-                            <CardContent className="p-3">
-                                <div className="flex gap-2 items-center">
-                                    <img src={track.cover} className="rounded-lg h-16 w-16" />
-                                    <div className="flex flex-col gap-2">
-                                        <CardTitle>{track.title}</CardTitle>
-                                        <CardDescription>{track.artist} &bull; {formatDistance(new Date(track.playedAt), new Date(), { addSuffix: true })}</CardDescription>
+                    {lastPlayed.map(track => {
+                        return (
+                            <Card key={track.id} className={cn(lastPlayed[lastPlayed.length - 1] != track && "mb-2")}>
+                                <CardContent className="p-3">
+                                    <div className="flex gap-2 items-center">
+                                        <img src={track.cover} className="rounded-lg h-16 w-16" />
+                                        <div className="flex flex-col gap-2">
+                                            <CardTitle>{track.title}</CardTitle>
+                                            <HoverCard>
+                                                <HoverCardTrigger asChild>
+                                                    <CardDescription className="flex items-center">{track.artist} &bull; {formatDistance(new Date(track.playedAt), new Date(), { addSuffix: true })}</CardDescription>
+                                                </HoverCardTrigger>
+                                                <HoverCardContent>
+                                                    <img src={track.artistCover} className="rounded-lg" height={'288px'} width={'288px'} />
+                                                    <p className="text-muted-foreground text-xs">{track.artist} &bull; Played at {format(track.playedAt, 'dd/MM/yy HH:mm')}</p>
+                                                </HoverCardContent>
+                                            </HoverCard>
+                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
                     )
                 })}
                 </ScrollArea>
+                }
+
+                {lastPlayed.length == 0 && 
+                    <div className="h-[385px] flex justify-center items-center">
+                        <p className="text-muted-foreground">Nothing to see - yet!</p>
+                    </div>
+                }
             </CardContent>
         </Card>
     )
