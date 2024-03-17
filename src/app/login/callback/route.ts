@@ -4,6 +4,7 @@ import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);
@@ -41,6 +42,9 @@ export async function GET(request: Request): Promise<Response> {
 			const session = await lucia.createSession(existingUser.id, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+            await db.update(users).set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken }).where(eq(users.id, existingUser.id))
+
 			return new Response(null, {
 				status: 302,
 				headers: {

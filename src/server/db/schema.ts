@@ -58,3 +58,20 @@ export const sessions = createTable("sessions", {
 		mode: "date"
 	}).notNull()
 });
+
+export const songHistory = createTable("song_history", {
+  id: serial("id").primaryKey(),
+  spotifyId: text("spotify_id").notNull(),
+  title: text("title").notNull(),
+  artist: text("artist").notNull(),
+  cover: text("art").notNull(),
+  playedBy: text("played_by").references(() => users.id).notNull(),
+  playedAt: timestamp("played_at", {
+    mode: "date",
+    withTimezone: true,
+  }).notNull(),
+  endAt: timestamp("end_at", {
+    mode: "date",
+    withTimezone: true
+  }).notNull()
+})

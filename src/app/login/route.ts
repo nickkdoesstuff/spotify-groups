@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 export async function GET(): Promise<Response> {
 	const state = generateState();
-	const url = await spotify.createAuthorizationURL(state);
+	const url = await spotify.createAuthorizationURL(state, { scopes: ['user-read-recently-played'] });
 
 	cookies().set("spotify_oauth_state", state, {
 		path: "/",
