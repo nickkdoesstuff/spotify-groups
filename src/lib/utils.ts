@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function generateUrl(){
   if(env.NODE_ENV == "production") {
-    return  process.env.VERCEL_URL
+    return  'https://sync.nickkirkwood.cc'
   } else {
     return "http://localhost:3000"
   }
