@@ -38,10 +38,10 @@ export default function ShareModal({ username }: ShareModalProps) {
                 <div className="flex items-center space-x-2">
                     <div className="grid flex-1 gap-2">
                         <Label htmlFor="link" className="sr-only">Link</Label>
-                        <Input id="link" defaultValue={`https://sync.nickkirkwood.co/profile/${username}`} />
+                        <Input id="link" defaultValue={`https://sync.nickkirkwood.cc/profile/${username}`} />
                     </div>
                     
-                    <Button type="submit" size="sm" className="px-3" onClick={() => copyToClipboard(`https://sync.nickkirkwood.co/profile/${username}`)}>
+                    <Button type="submit" size="sm" className="px-3" onClick={() => copyToClipboard(`https://sync.nickkirkwood.cc/profile/${username}`)}>
                         <span className="sr-only">Copy</span>
                         <CopyIcon className="h-4 w-4" />
                     </Button>
