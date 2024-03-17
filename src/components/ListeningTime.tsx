@@ -25,7 +25,7 @@ export async function ListeningTime() {
     const saturdayStartDate = addDays(mondayStartDate, 5)
     const sundayStartDate = addDays(mondayStartDate, 6)
 
-    let times: TimesArray[] = [{ name: "monday", value: 0 }, { name: "tuesday", value: 0 }, { name: "wednesday", value: 0 }, { name: "thursday", value: 0 }, { name: "friday", value: 0 }, { name: "saturday", value: 0 }, { name: "sunday", value: 0 }]
+    const times: TimesArray[] = [{ name: "monday", value: 0 }, { name: "tuesday", value: 0 }, { name: "wednesday", value: 0 }, { name: "thursday", value: 0 }, { name: "friday", value: 0 }, { name: "saturday", value: 0 }, { name: "sunday", value: 0 }]
 
     const playedToday = await db.select().from(songHistory).where(
         and(
