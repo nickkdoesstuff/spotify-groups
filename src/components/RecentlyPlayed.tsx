@@ -8,7 +8,8 @@ import { ScrollArea } from "./ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { User } from "lucia";
 import { HoverCardContent, HoverCard, HoverCardTrigger } from "./ui/hover-card"
-
+import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
+import { MicVocal, Music2 } from "lucide-react"
 
 interface RecentlyPlayedProps {
     user?: User | null
@@ -43,7 +44,10 @@ export async function RecentlyPlayed({ user, isProfile }: RecentlyPlayedProps) {
                             <Card key={track.id} className={cn(lastPlayed[lastPlayed.length - 1] != track && "mb-2")}>
                                 <CardContent className="p-3">
                                     <div className="flex gap-2 items-center">
-                                        <img src={track.cover} className="rounded-lg h-16 w-16" />
+                                        <Avatar>
+                                            <AvatarImage src={track.cover} />
+                                            <AvatarFallback><Music2 /></AvatarFallback>
+                                        </Avatar>
                                         <div className="flex flex-col gap-2">
                                             <CardTitle>{track.title}</CardTitle>
                                             <HoverCard>
@@ -51,7 +55,10 @@ export async function RecentlyPlayed({ user, isProfile }: RecentlyPlayedProps) {
                                                     <CardDescription className="flex items-center">{track.artist} &bull; {formatDistance(new Date(track.playedAt), new Date(), { addSuffix: true })}</CardDescription>
                                                 </HoverCardTrigger>
                                                 <HoverCardContent>
-                                                    <img src={track.artistCover} className="rounded-lg" height={'288px'} width={'288px'} />
+                                                <Avatar className="h-full w-full">
+                                                    <AvatarImage src={track.artistCover} className="w-full h-full" />
+                                                    <AvatarFallback><MicVocal /></AvatarFallback>
+                                                </Avatar>
                                                     <p className="text-muted-foreground text-xs">{track.artist} &bull; Played at {format(track.playedAt, 'dd/MM/yy HH:mm')}</p>
                                                 </HoverCardContent>
                                             </HoverCard>

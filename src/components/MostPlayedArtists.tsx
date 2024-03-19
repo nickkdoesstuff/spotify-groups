@@ -7,6 +7,8 @@ import { startOfWeek } from "date-fns";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { User } from "lucia";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { MicVocal } from "lucide-react";
 
 interface MostPlayedProps {
     user?: User | null
@@ -69,8 +71,10 @@ export async function MostPlayedArtists({ user, isProfile }: MostPlayedProps) {
                             <Card key={track.id} className={cn(topSongs[topSongs.length - 1] != track && "mb-2")}>
                                 <CardContent className="p-3">
                                     <div className="flex gap-2 items-center">
-                                        <img src={track.artistCover} className="rounded-lg h-16 w-16" />
-                                        <div className="flex flex-col gap-2">
+                                    <Avatar>
+                                            <AvatarImage src={track.cover} />
+                                            <AvatarFallback><MicVocal /></AvatarFallback>
+                                        </Avatar>                                        <div className="flex flex-col gap-2">
                                             <CardTitle>{track.artist}</CardTitle>
                                             <CardDescription>Played <strong>{track.occurrences}</strong> times</CardDescription>
                                         </div>
