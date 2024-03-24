@@ -72,7 +72,7 @@ export async function MostPlayedArtists({ user, isProfile }: MostPlayedProps) {
                                 <CardContent className="p-3">
                                     <div className="flex gap-2 items-center">
                                     <Avatar>
-                                            <AvatarImage src={track.cover} />
+                                            <AvatarImage src={track.artistCover} />
                                             <AvatarFallback><MicVocal /></AvatarFallback>
                                         </Avatar>                                        <div className="flex flex-col gap-2">
                                             <CardTitle>{track.artist}</CardTitle>
