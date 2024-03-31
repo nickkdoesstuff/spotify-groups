@@ -61,7 +61,7 @@ export async function MostPlayedArtists({ user, isProfile }: MostPlayedProps) {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Top Artists</CardTitle>
-                <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to artists this weeek</CardDescription>
+                <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to artists this week</CardDescription>
             </CardHeader>
             <CardContent>
             {topSongs.length > 0 && 
@@ -100,7 +100,7 @@ export function MostPlayedArtistsLoading() {
         <Card>
             <CardHeader>
                 <CardTitle>Most Listened To</CardTitle>
-                <CardDescription>Your most listened to songs this weeek</CardDescription>
+                <CardDescription>Your most listened to songs this week</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="h-[385px] flex items-center justify-center">
