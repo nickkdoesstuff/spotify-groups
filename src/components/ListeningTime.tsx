@@ -1,12 +1,12 @@
-import { User } from "lucia";
+import type { User } from "lucia";
 import { getUser } from "@/lib/auth";
 import { db } from "@/server/db";
-import { startOfDay, format, startOfWeek, addDays  } from "date-fns";
+import { startOfWeek, addDays  } from "date-fns";
 import { and, eq, gte } from "drizzle-orm";
 import { songHistory } from "@/server/db/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
-import BarGraph from "./ListeningTime/graph";
+import { ListeningTimeClient } from "./ListeningTimeClient";
 interface TimesArray {
     name: string,
     value: number
@@ -20,6 +20,10 @@ interface ListeningTimeProps {
 export async function ListeningTime({ user, isProfile }: ListeningTimeProps) {
     if(!user) {
         user = await getUser()
+    }
+
+    if(!isProfile) {
+        isProfile = false
     }
 
     let totalTime = 0
@@ -69,16 +73,7 @@ export async function ListeningTime({ user, isProfile }: ListeningTimeProps) {
 
 
     return (
-       <Card className="w-full">
-        <CardHeader>
-            <CardTitle>Listening Time</CardTitle>
-            <CardDescription>How long {isProfile ? `${user?.username} has` : <span>you&apos;ve</span>} spent listening this week</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <p className="font-bold text-2xl mb-6">{timeInMins} <span className="font-normal text-muted-foreground text-sm">minutes this week</span></p>
-            <BarGraph times={times} />
-        </CardContent>
-       </Card>
+        <ListeningTimeClient isProfile={isProfile} user={user!} totalTime={timeInMins} times={times} />
     )
 }
 

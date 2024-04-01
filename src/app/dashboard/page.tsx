@@ -1,4 +1,3 @@
-import { getUser } from "@/lib/auth"
 import { RecentlyPlayed, RecentlyPlayedLoading } from "@/components/RecentlyPlayed"
 import { Suspense } from "react"
 import { ListeningTime , ListeningTimeLoading} from "@/components/ListeningTime"
@@ -7,8 +6,6 @@ import { ProfileCard } from "@/components/ProfileCard"
 import { MostPlayedArtists, MostPlayedArtistsLoading } from "@/components/MostPlayedArtists"
 
 export default async function DashboardHome() {
-    const user = await getUser()
-
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <ProfileCard />

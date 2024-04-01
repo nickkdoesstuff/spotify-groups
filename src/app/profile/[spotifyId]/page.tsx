@@ -6,13 +6,13 @@ import { Suspense } from "react"
 import { RecentlyPlayed, RecentlyPlayedLoading } from "@/components/RecentlyPlayed"
 import { ListeningTime, ListeningTimeLoading } from "@/components/ListeningTime"
 import { MostPlayed, MostPlayedLoading } from "@/components/MostPlayed"
-import { User } from "lucia"
-import { Metadata, ResolvingMetadata } from "next"
+import type { User } from "lucia"
+import type { Metadata } from "next"
 import { generateMetadata as genMeta } from "@/lib/utils"
 import { ProfileCard } from "@/components/ProfileCard"
 import { MostPlayedArtists, MostPlayedArtistsLoading } from "@/components/MostPlayedArtists"
 
-export async function generateMetadata({ params }: { params: { spotifyId: string } }, parent: ResolvingMetadata):Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { spotifyId: string } }):Promise<Metadata> {
     const userList = await db.select().from(users).where(
         eq(users.spotifyId, params.spotifyId)
     )

@@ -18,6 +18,7 @@ const config = {
     "@typescript-eslint/no-unsafe-assignment": 'off',
     "@typescript-eslint/no-empty-interface": 'off',
     "@typescript-eslint/consistent-type-definitions": "off",
+    "@next/next/no-img-element": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {

@@ -4,11 +4,8 @@ import { db } from "@/server/db";
 import { songHistory } from "@/server/db/schema";
 import { and, eq, gte } from "drizzle-orm";
 import { startOfWeek } from "date-fns";
-import { ScrollArea } from "./ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { User } from "lucia";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { MicVocal } from "lucide-react";
+import type { User } from "lucia";
+import { MostPlayedArtistsClient } from "./MostPlayedArtistsClient";
 
 interface MostPlayedProps {
     user?: User | null
@@ -58,40 +55,7 @@ export async function MostPlayedArtists({ user, isProfile }: MostPlayedProps) {
     }
 
     return (
-        <Card className="w-full">
-            <CardHeader>
-                <CardTitle>Top Artists</CardTitle>
-                <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to artists this week</CardDescription>
-            </CardHeader>
-            <CardContent>
-            {topSongs.length > 0 && 
-                <ScrollArea className="h-[385px] flex flex-col">
-                    {topSongs.map(track => {
-                        return (
-                            <Card key={track.id} className={cn(topSongs[topSongs.length - 1] != track && "mb-2")}>
-                                <CardContent className="p-3">
-                                    <div className="flex gap-2 items-center">
-                                    <Avatar>
-                                            <AvatarImage src={track.artistCover} />
-                                            <AvatarFallback><MicVocal /></AvatarFallback>
-                                        </Avatar>                                        <div className="flex flex-col gap-2">
-                                            <CardTitle>{track.artist}</CardTitle>
-                                            <CardDescription>Played <strong>{track.occurrences}</strong> times</CardDescription>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )
-                    })}
-                    </ScrollArea>
-            }
-            {topSongs.length == 0 &&
-                <div className="h-[385px] flex justify-center items-center">
-                    <p className="text-muted-foreground">Nothing to see - yet!</p>
-                </div>
-            }
-            </CardContent>
-        </Card>
+       <MostPlayedArtistsClient isProfile={isProfile} topSongs={topSongs} user={user!} />
     )
 }
 
