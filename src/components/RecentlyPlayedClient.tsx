@@ -2,15 +2,16 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { songHistory } from "@/server/db/schema"
-import { format, formatDistance } from "date-fns"
+import { format, formatDistance, startOfWeek } from "date-fns"
 import { ScrollArea } from "./ui/scroll-area"
 import { cn } from "@/lib/utils"
 import type { User } from "lucia";
 import { HoverCardContent, HoverCard, HoverCardTrigger } from "./ui/hover-card"
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
-import { MicVocal, Music2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Loader2, MicVocal, Music2 } from "lucide-react"
+import { useContext, useEffect, useState } from "react"
 import { api } from "@/trpc/react"
+import { DateContext } from "./DateWrapper";
 
 interface RecentlyPlayedClientProps {
     lastPlayed: typeof songHistory.$inferSelect[]
@@ -21,8 +22,12 @@ interface RecentlyPlayedClientProps {
 export function RecentlyPlayedClient({ lastPlayed, user, isProfile }: RecentlyPlayedClientProps) {
 
     const [tracks, setTracks] = useState<typeof lastPlayed>(lastPlayed)
+    const {date} = useContext(DateContext)
 
-    const { data } = api.spotify.recent.useQuery({ userId: user.id }, { refetchInterval: 30000, refetchOnWindowFocus: true })
+    const { data, isLoading } = api.spotify.recent.useQuery({ userId: user.id }, { refetchInterval: 30000, refetchOnWindowFocus: true })
+
+    const startOfWeekTime = startOfWeek(new Date(), { weekStartsOn: 1 })
+    const dateStartOfWeekTime = startOfWeek(date!, { weekStartsOn: 1 })
 
     useEffect(() => {
         console.log(data)
@@ -32,10 +37,11 @@ export function RecentlyPlayedClient({ lastPlayed, user, isProfile }: RecentlyPl
     }, [setTracks, data])
 
     return (
-        <Card className="w-full">
-            <CardHeader>
+        <Card className={cn("w-full transition-opacity", startOfWeekTime.getTime() != dateStartOfWeekTime.getTime() && "opacity-50")}>
+            <CardHeader className="relative">
                 <CardTitle>Last 10 Songs</CardTitle>
                 <CardDescription>The most recent songs { isProfile ? `${user.username} has been` : <span>you&apos;ve been</span>} listening to</CardDescription>
+                {isLoading && <Loader2 className="h-4 w-4 top-4 right-4 absolute text-muted-foreground animate-spin" />}
             </CardHeader>
             <CardContent>
                 {tracks.length > 0 && 

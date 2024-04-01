@@ -3,8 +3,8 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { db } from "@/server/db";
 import { songHistory } from "@/server/db/schema";
-import { and, eq, gte } from "drizzle-orm";
-import { addDays, startOfWeek } from "date-fns";
+import { and, eq, gte, lte } from "drizzle-orm";
+import { addDays, endOfWeek, startOfWeek } from "date-fns";
 
 interface TimesArray {
   name: string,
@@ -25,24 +25,26 @@ export const spotifyRouter = createTRPCRouter({
   }),
 
   time: publicProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string(), date: z.date() }))
     .query(async ({ input }) => {
       let totalTime = 0
 
-      const mondayStartDate = startOfWeek(new Date(), { weekStartsOn: 1 })
+      const mondayStartDate = startOfWeek(input.date, { weekStartsOn: 1 })
       const tuesdayStartDate = addDays(mondayStartDate, 1)
       const wednesdayStartDate = addDays(mondayStartDate, 2)
       const thursdayStartDate = addDays(mondayStartDate, 3)
       const fridayStartDate = addDays(mondayStartDate, 4)
       const saturdayStartDate = addDays(mondayStartDate, 5)
       const sundayStartDate = addDays(mondayStartDate, 6)
+      const endOfWeekTime = endOfWeek(input.date, { weekStartsOn: 1 })
 
       const times: TimesArray[] = [{ name: "monday", value: 0 }, { name: "tuesday", value: 0 }, { name: "wednesday", value: 0 }, { name: "thursday", value: 0 }, { name: "friday", value: 0 }, { name: "saturday", value: 0 }, { name: "sunday", value: 0 }]
 
       const playedToday = await db.select().from(songHistory).where(
           and(
               eq(songHistory.playedBy, input.userId),
-              gte(songHistory.playedAt, mondayStartDate)
+              gte(songHistory.playedAt, mondayStartDate),
+              lte(songHistory.playedAt, endOfWeekTime)
           )
       )
 
@@ -79,13 +81,16 @@ export const spotifyRouter = createTRPCRouter({
     }),
 
   topSongs: publicProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string(), date: z.date() }))
     .query(async ({ input }) => {
+      const startOfWeekTime = startOfWeek(input.date, { weekStartsOn: 1 })
+      const endOfWeekTime = endOfWeek(input.date, { weekStartsOn: 1 })
       const songsPlayed = await db.select().from(songHistory)
         .where(
             and(
                 eq(songHistory.playedBy, input.userId),
-                gte(songHistory.playedAt, startOfWeek(new Date(), { weekStartsOn: 1 }))
+                gte(songHistory.playedAt, startOfWeekTime),
+                lte(songHistory.playedAt, endOfWeekTime)
             )
         )
     
@@ -119,13 +124,17 @@ export const spotifyRouter = createTRPCRouter({
     }),
 
   topArtists: publicProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string(), date: z.date() }))
     .query(async ({ input }) => {
+      const startOfWeekTime = startOfWeek(input.date, { weekStartsOn: 1 })
+      const endOfWeekTime = endOfWeek(input.date, { weekStartsOn: 1 })
+
       const songsPlayed = await db.select().from(songHistory)
         .where(
             and(
                 eq(songHistory.playedBy, input.userId),
-                gte(songHistory.playedAt, startOfWeek(new Date(), { weekStartsOn: 1 }))
+                gte(songHistory.playedAt, startOfWeekTime),
+                lte(songHistory.playedAt, endOfWeekTime)
             )
         )
       

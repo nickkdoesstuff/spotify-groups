@@ -1,6 +1,6 @@
 "use client";
 
-import { Music2 } from "lucide-react";
+import { Loader2, Music2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
@@ -8,7 +8,8 @@ import type { songHistory } from "@/server/db/schema";
 import type { User } from "lucia";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { DateContext } from "./DateWrapper";
 
 type SongsPlayed = typeof songHistory.$inferSelect
 interface TopSongs extends SongsPlayed {
@@ -24,8 +25,9 @@ interface MostPlayedClientProps {
 export function MostPlayedClient({ isProfile, user, topSongs }: MostPlayedClientProps) {
 
     const [topList, setTopList] = useState<typeof topSongs>(topSongs)
+    const {date} = useContext(DateContext)
 
-    const { data } = api.spotify.topSongs.useQuery({ userId: user.id }, { refetchInterval: 30000, refetchOnWindowFocus: true })
+    const { data, isLoading } = api.spotify.topSongs.useQuery({ userId: user.id, date: date! }, { refetchInterval: 30000, refetchOnWindowFocus: true })
 
     useEffect(() => {
         if (data) {
@@ -35,9 +37,10 @@ export function MostPlayedClient({ isProfile, user, topSongs }: MostPlayedClient
 
     return (
         <Card className="w-full">
-            <CardHeader>
+            <CardHeader className="relative">
                 <CardTitle>Most Played</CardTitle>
                 <CardDescription>{isProfile ? `${user?.username}'s` : 'Your'} most listened to songs this week</CardDescription>
+                {isLoading && <Loader2 className="h-4 w-4 top-4 right-4 absolute text-muted-foreground animate-spin" />}
             </CardHeader>
             <CardContent>
             {topList.length > 0 && 
