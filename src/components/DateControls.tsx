@@ -24,7 +24,7 @@ export function DateControls() {
     }
 
     return (
-        <div className="flex gap-2 col-span-2">
+        <div className="flex gap-2 col-span-1 sm:col-span-2">
             <Button onClick={subtractDate} size={'icon'} variant={"outline"}><ChevronLeft className="h-5 w-5" /></Button>
             <div className="border w-full rounded-md flex items-center justify-center">
                 <p className="text-xs text-muted-foreground text-center">{format(startOfWeek(date!, { weekStartsOn: 1 }), 'do MMMM')} - {format(endOfWeek(date!, { weekStartsOn: 1 }), 'do MMMM')}</p>
