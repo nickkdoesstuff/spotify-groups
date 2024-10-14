@@ -34,6 +34,7 @@ export async function GET(request: Request): Promise<Response> {
 		});
 
         if (spotifyUserResponse.status != 200) {
+			console.log('cannot access profile')
             return new Response(null, {
                 status: 400
             });
